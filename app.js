@@ -3,6 +3,7 @@ const app = express()
 const mongoose = require("mongoose");
 
 const List = require('./models/list.model')
+const Task = require('./models/task.model')
 
 mongoose.connect('mongodb://localhost:27018/task_manager').then(() => {
     console.log('mongodb connected to the database')
@@ -47,6 +48,23 @@ mongoose.connect('mongodb://localhost:27018/task_manager').then(() => {
         })
     })
 
+    app.get('/lists/:listId/tasks', (req, res) => {
+        Task.find({
+            _listId: req.params.listId
+        }).then(tasks => {
+            res.send(tasks)
+        })
+    })
+
+    app.post('/lists/:listId/tasks', (req, res) => {
+        newTask = new Task({
+            title: req.body.title,
+            _listId: req.params.listId
+        });
+        newTask.save().then(newTask => {
+            res.send(newTask)
+        })
+    })
 
     app.listen(3000, () => {
         console.log('This was serve on port 3000');
@@ -55,3 +73,4 @@ mongoose.connect('mongodb://localhost:27018/task_manager').then(() => {
     console.log('mongodb failed to connect to the database')
     console.log(e)
 })
+
