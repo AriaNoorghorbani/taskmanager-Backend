@@ -66,6 +66,36 @@ mongoose.connect('mongodb://localhost:27018/task_manager').then(() => {
         })
     })
 
+    app.get('/lists/:listId/tasks/:taskId', (req, res) => {
+        Task.find({
+            _id: req.params.taskId,
+            _listId: req.params.listId
+        }).then(task => {
+            res.send(task)
+        })
+    })
+
+    app.patch('/lists/:listId/tasks/:taskId', (req, res) => {
+        Task.findOneAndUpdate({
+            _id: req.params.taskId,
+            _listId: req.params.listId
+        }, {
+            $set: req.body
+        }).then(() => {
+            res.sendStatus(200)
+        })
+    })
+
+    app.delete('/lists/:listId/tasks/:taskId', (req, res) => {
+        Task.findOneAndRemove({
+            _id: req.params.taskId,
+            _listId: req.params.listId
+        }).then((removedTask) => {
+            res.send(removedTask)
+        })
+    })
+
+
     app.listen(3000, () => {
         console.log('This was serve on port 3000');
     })
