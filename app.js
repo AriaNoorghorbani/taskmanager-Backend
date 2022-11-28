@@ -5,8 +5,15 @@ const mongoose = require("mongoose");
 const List = require('./models/list.model')
 const Task = require('./models/task.model')
 
+app.use(function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
+
 mongoose.connect('mongodb://localhost:27018/task_manager').then(() => {
     console.log('mongodb connected to the database')
+
 
     const bodyParser = require('body-parser')
     app.use(bodyParser.json())
